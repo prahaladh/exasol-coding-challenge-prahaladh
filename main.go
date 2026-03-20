@@ -72,15 +72,16 @@ func solvePOW(authdata string, difficulty int) string {
 
 func main() {
 
-	//Load cert + key from env
+	// Load cert + key from env
 	certFile := os.Getenv("TLS_CERT")
 	keyFile := os.Getenv("TLS_KEY")
+
 	if certFile == "" || keyFile == "" {
 		fmt.Println("Set TLS_CERT and TLS_KEY environment variables")
 		return
 	}
 
-	cert, err := tls.LoadX509KeyPair("client.pem", "client.pem")
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
 		panic(err)
 	}
@@ -90,11 +91,28 @@ func main() {
 		InsecureSkipVerify: true,
 	}
 
-	// 🔌 Connect to server
-	conn, err := tls.Dial("tcp", "18.202.148.130:3336", config)
-	if err != nil {
-		panic(err)
+	// Try multiple ports
+	ports := []string{"3336", "8083", "8446", "49155", "3481", "65532"}
+
+	var conn *tls.Conn
+
+	for _, port := range ports {
+		address := "18.202.148.130:" + port
+		fmt.Println("Trying port:", port)
+
+		conn, err = tls.Dial("tcp", address, config)
+		if err == nil {
+			fmt.Println("Connected on port:", port)
+			break
+		}
+
+		fmt.Println("Failed:", err)
 	}
+
+	if conn == nil {
+		panic("Could not connect to any port")
+	}
+
 	defer conn.Close()
 
 	reader := bufio.NewReader(conn)
@@ -155,11 +173,11 @@ func main() {
 
 		case "END":
 			conn.Write([]byte("OK\n"))
-			fmt.Println("✅ Completed successfully")
+			fmt.Println("Completed successfully")
 			return
 
 		case "ERROR":
-			fmt.Println("❌ Server error:", strings.Join(args[1:], " "))
+			fmt.Println("Server error:", strings.Join(args[1:], " "))
 			return
 		}
 	}

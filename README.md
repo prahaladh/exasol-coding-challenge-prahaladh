@@ -94,9 +94,10 @@ export TLS_KEY=client.pem
 
 ---
 
-### 2. Run
+### 2. Install the dependencies and Run the Code
 
 ```
+go mod tidy
 go run main.go
 ```
 

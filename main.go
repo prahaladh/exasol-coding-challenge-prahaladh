@@ -145,31 +145,31 @@ func main() {
 			conn.Write([]byte(suffix + "\n"))
 
 		case "NAME":
-			send(conn, authdata, args[1], "Prahaladh HN")
+			send(conn, authdata, args[1], name)
 
 		case "MAILNUM":
 			send(conn, authdata, args[1], "1")
 
 		case "MAIL1":
-			send(conn, authdata, args[1], "prahaladhhn96@gmail.com")
+			send(conn, authdata, args[1], email)
 
 		case "SKYPE":
-			send(conn, authdata, args[1], "N/A")
+			send(conn, authdata, args[1], skype)
 
 		case "BIRTHDATE":
-			send(conn, authdata, args[1], "01.01.1996")
+			send(conn, authdata, args[1], birthdate)
 
 		case "COUNTRY":
-			send(conn, authdata, args[1], "India")
+			send(conn, authdata, args[1], country)
 
 		case "ADDRNUM":
 			send(conn, authdata, args[1], "2")
 
 		case "ADDRLINE1":
-			send(conn, authdata, args[1], "Chennai")
+			send(conn, authdata, args[1], addr1)
 
 		case "ADDRLINE2":
-			send(conn, authdata, args[1], "Tamil Nadu")
+			send(conn, authdata, args[1], addr2)
 
 		case "END":
 			conn.Write([]byte("OK\n"))
